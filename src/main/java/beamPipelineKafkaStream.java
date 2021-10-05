@@ -9,7 +9,10 @@ import org.apache.beam.sdk.values.PCollection;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 
-public class beamPipelineKafkaStream {
+public class beamPipelineKafkaStream extends Thread {
+
+    public beamPipelineKafkaStream(){
+    }
 
     static class oneLog extends DoFn<String, String> {
         @ProcessElement
@@ -19,7 +22,7 @@ public class beamPipelineKafkaStream {
         }
     }
 
-    public static void main(String[] args){
+    public void run(){
         PipelineOptions options = PipelineOptionsFactory.create();
 
         Pipeline p = Pipeline.create();
@@ -32,6 +35,7 @@ public class beamPipelineKafkaStream {
                 .withoutMetadata())
                 .apply(Values.<String>create())
                 .apply(ParDo.of(new oneLog()));
+
         p.run().waitUntilFinish();
     }
 }
